@@ -46,24 +46,24 @@ const HomePage = () => {
   }, [category, tag, refetch])
 
   useEffect(() => {
-    if (!loading) {
-      refetch()
-    }
+  const handleRecipeCreated = (newRecipe) => {
+    toast.info(`🍲 New recipe published: ${newRecipe.title}`)
+    refetch()
+  }
 
-    socket.on('recipeCreated', (newRecipe) => {
-      toast.info(`🍲 New recipe published: ${newRecipe.title}`)
-      refetch()
-    })
+  const handleLikeCreated = () => {
+    refetch()
+  }
 
-    socket.on('likeCreated', () => {
-      refetch()
-    })
+  socket.on('recipeCreated', handleRecipeCreated)
+  socket.on('likeCreated', handleLikeCreated)
 
-    return () => {
-      socket.off('recipeCreated')
-      socket.off('likeCreated')
-    }
-  }, [loading, refetch])
+  return () => {
+    socket.off('recipeCreated', handleRecipeCreated)
+    socket.off('likeCreated', handleLikeCreated)
+  }
+}, [refetch])
+
 
   const filteredRecipes = recipes.filter((recipe) =>
     recipe.title.toLowerCase().includes(search.toLowerCase())
