@@ -73,35 +73,32 @@ export const createComment = ({ input }) => {
 }
 
 export const likeRecipe = async ({ recipeId, userId }) => {
-
   const existingLike = await db.like.findFirst({
-    where: {
-      recipeId,
-      userId,
-    },
-  })
-
-  if (existingLike) {
-
-    await db.like.delete({
-      where: {
-        id: existingLike.id,
-      },
-    })
-
-    return { isLiked: false }
-  }
-
-
-  const like = await db.like.create({
-    data: {
-      recipeId,
-      userId,
-    },
+    where: { recipeId, userId },
     include: { recipe: true },
   })
 
-  return { isLiked: true }
-}
+  if (existingLike) {
+    await db.like.delete({
+      where: { id: existingLike.id },
+    })
 
+    return {
+      isLiked: false,
+      id: existingLike.id,
+      recipe: existingLike.recipe,
+    }
+  }
+
+  const like = await db.like.create({
+    data: { recipeId, userId },
+    include: { recipe: true },
+  })
+
+  return {
+    isLiked: true,
+    id: like.id,
+    recipe: like.recipe,
+  }
+}
 

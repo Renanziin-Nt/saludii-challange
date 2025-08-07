@@ -19,7 +19,6 @@ const RecipePage = () => {
 
 
   const userId = localStorage.getItem('userId') || generateUserId()
-  console.log('User ID:', userId)
 
   function generateUserId() {
     const id = `user-${Math.random().toString(36).substr(2, 9)}`
@@ -46,7 +45,7 @@ const RecipePage = () => {
       refetch()
     } catch (error) {
       console.error('Error liking the recipe:', error)
-      alert('Error liking the recipe: ' + error.message)
+
     }
   }
 

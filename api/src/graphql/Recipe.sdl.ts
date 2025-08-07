@@ -64,6 +64,8 @@ export const schema = gql`
 
   type LikeResponse {
     isLiked: Boolean!
+    id: Int
+    recipe: Recipe
   }
 
 
