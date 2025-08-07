@@ -15,6 +15,7 @@ import MDEditor from '@uiw/react-md-editor'
 import { useMutation, useQuery } from '@redwoodjs/web'
 
 import { GET_CATEGORIES } from 'src/graphql/category'
+import { GET_TAGS } from 'src/graphql/tags'
 import { CREATE_RECIPE_MUTATION } from 'src/graphql/recipes'
 
 const RecipeForm = ({ onCreated }) => {
@@ -23,11 +24,13 @@ const RecipeForm = ({ onCreated }) => {
   const [servings, setServings] = useState(0)
   const [personalNote, setPersonalNote] = useState('')
   const [categoryId, setCategoryId] = useState('')
+  const [tagId, setTagId] = useState('')
   const [ingredients, setIngredients] = useState('')
   const [instructions, setInstructions] = useState('')
 
   const [createRecipe] = useMutation(CREATE_RECIPE_MUTATION)
-  const { data, loading } = useQuery(GET_CATEGORIES)
+  const { data: categoryData, loading: categoryLoading } = useQuery(GET_CATEGORIES)
+  const { data: tagData, loading: tagLoading } = useQuery(GET_TAGS)
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -43,7 +46,7 @@ const RecipeForm = ({ onCreated }) => {
           personalNote,
           slug: title.toLowerCase().replace(/\s+/g, '-'),
           categoryId: parseInt(categoryId),
-          tagIds: [],
+          tagIds: tagId ? [parseInt(tagId)] : [],
           userName: localStorage.getItem('username'),
         },
       },
@@ -79,6 +82,7 @@ const RecipeForm = ({ onCreated }) => {
               onChange={(e) => setTitle(e.target.value)}
             />
 
+            {/* Category Select */}
             <FormControl variant="standard" fullWidth>
               <InputLabel id="category-label">Category</InputLabel>
               <Select
@@ -86,10 +90,30 @@ const RecipeForm = ({ onCreated }) => {
                 value={categoryId}
                 onChange={(e) => setCategoryId(e.target.value)}
               >
-                {loading ? (
+                {categoryLoading ? (
                   <MenuItem value="">Loading...</MenuItem>
                 ) : (
-                  data?.categories.map(({ id, name }) => (
+                  categoryData?.categories.map(({ id, name }) => (
+                    <MenuItem key={id} value={id}>
+                      {name}
+                    </MenuItem>
+                  ))
+                )}
+              </Select>
+            </FormControl>
+
+            {/* Tag Select */}
+            <FormControl variant="standard" fullWidth>
+              <InputLabel id="tag-label">Tag</InputLabel>
+              <Select
+                labelId="tag-label"
+                value={tagId}
+                onChange={(e) => setTagId(e.target.value)}
+              >
+                {tagLoading ? (
+                  <MenuItem value="">Loading...</MenuItem>
+                ) : (
+                  tagData?.tags.map(({ id, name }) => (
                     <MenuItem key={id} value={id}>
                       {name}
                     </MenuItem>
