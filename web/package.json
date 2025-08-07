@@ -11,11 +11,20 @@
     ]
   },
   "dependencies": {
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.1",
+    "@mui/icons-material": "^7.3.0",
+    "@mui/material": "^7.3.0",
     "@redwoodjs/forms": "8.8.0",
     "@redwoodjs/router": "8.8.0",
     "@redwoodjs/web": "8.8.0",
+    "@tiptap/react": "^3.0.9",
+    "@tiptap/starter-kit": "^3.0.9",
     "react": "18.3.1",
-    "react-dom": "18.3.1"
+    "react-dom": "18.3.1",
+    "react-toastify": "^11.0.5",
+    "socket.io-client": "^4.8.1",
+    "toast": "^0.5.4"
   },
   "devDependencies": {
     "@redwoodjs/vite": "8.8.0",
